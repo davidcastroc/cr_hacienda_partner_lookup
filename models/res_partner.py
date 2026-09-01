@@ -29,10 +29,10 @@ class ResPartner(models.Model):
 
     def _consult_res_partner_mh(self, identification=None, raise_error=True):
         self.ensure_one()
-        identification = self._mh_normalize_identification(identification or self.ref)
+        identification = self._mh_normalize_identification(identification or self.vat)
         if not identification:
             if raise_error:
-                raise UserError(_("Por favor ingrese una cédula/identificación en el campo Referencia del contacto."))
+                raise UserError(_("Por favor ingrese una cédula/identificación en el campo Número de identificación fiscal (Tax ID) del contacto."))
             return False
 
         url = "https://api.hacienda.go.cr/fe/ae"
@@ -80,9 +80,9 @@ class ResPartner(models.Model):
 
     def action_consult_res_partner(self):
         self.ensure_one()
-        identification = self._mh_normalize_identification(self.ref)
+        identification = self._mh_normalize_identification(self.vat)
         if not identification:
-            raise UserError(_("Por favor ingrese una cédula/identificación en el campo Referencia del contacto."))
+            raise UserError(_("Por favor ingrese una cédula/identificación en el campo Número de identificación fiscal (Tax ID) del contacto."))
 
         response = self._consult_res_partner_mh(identification=identification)
         tax_situation = response.get("situacionTributaria") or response
